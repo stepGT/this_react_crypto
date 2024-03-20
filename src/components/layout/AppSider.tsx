@@ -3,6 +3,7 @@ import { Layout } from 'antd';
 import { Card, Statistic, List, Typography, Spin } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { fakeFetchCrypto, fetchAssets } from '../../API';
+import { TAssets, IResult } from '../../data';
 
 const siderStyle: React.CSSProperties = {
   padding: '1rem',
@@ -16,61 +17,19 @@ const data = [
   'Los Angeles battles huge wildfires.',
 ];
 
-type TAssets = {
-  id: string;
-  amount: number;
-  price: number;
-  date: string;
-};
-
-type TCryptoData = {
-  id: string;
-  icon: string;
-  name: string;
-  symbol: string;
-  rank: number;
-  price: number;
-  priceBtc: number;
-  volume: number;
-  marketCap: number;
-  availableSupply: number;
-  totalSupply: number;
-  priceChange1h: number;
-  priceChange1d: number;
-  priceChange1w: number;
-  redditUrl: string;
-  websiteUrl: string;
-  twitterUrl: string;
-  explorers: string[];
-};
-
-type TMeta = {
-  page: number;
-  limit: number;
-  itemCount: number;
-  pageCount: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
-};
-
-interface IResult {
-  result: TCryptoData;
-  meta: TMeta;
-}
-
 const AppSider = () => {
   const [loading, setLoading] = useState(false);
-  const [crypto, setCrypto] = useState([]);
-  const [assets, setAssets] = useState([]);
+  const [crypto, setCrypto] = useState<IResult>();
+  const [assets, setAssets] = useState<TAssets[]>();
 
   useEffect(() => {
     const preload = async () => {
       setLoading(true);
-      const { result }: any = await fakeFetchCrypto();
-      const assets: any = await fetchAssets();
+      const dataCrypto = await fakeFetchCrypto();
+      const dataAssets = await fetchAssets();
       //
-      setCrypto(result);
-      setAssets(assets);
+      setCrypto(dataCrypto);
+      setAssets(dataAssets);
       setLoading(false);
     };
     preload();

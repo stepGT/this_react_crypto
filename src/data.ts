@@ -1,4 +1,48 @@
-﻿export const cryptoData = {
+﻿export interface IResult {
+  result: TCryptoData[];
+  meta: TMeta;
+}
+
+export type TAssets = {
+  id: string;
+  amount: number;
+  price: number;
+  date: object;
+};
+
+type TCryptoData = {
+  id: string;
+  icon: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  price: number;
+  priceBtc: number;
+  volume: number;
+  marketCap: number;
+  availableSupply: number;
+  totalSupply: number;
+  priceChange1h: number;
+  priceChange1d: number;
+  priceChange1w: number;
+  redditUrl: string;
+  websiteUrl: string;
+  twitterUrl: string;
+  contractAddress?: string;
+  decimals?: number;
+  explorers: string[];
+};
+
+type TMeta = {
+  page: number;
+  limit: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
+export const cryptoData: IResult = {
   result: [
     {
       id: 'bitcoin',
@@ -607,7 +651,7 @@
   },
 };
 
-export const cryptoAssets = [
+export const cryptoAssets: TAssets[] = [
   {
     id: 'bitcoin',
     amount: 0.02,
