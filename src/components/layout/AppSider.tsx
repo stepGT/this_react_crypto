@@ -16,6 +16,48 @@ const data = [
   'Los Angeles battles huge wildfires.',
 ];
 
+type TAssets = {
+  id: string;
+  amount: number;
+  price: number;
+  date: string;
+};
+
+type TCryptoData = {
+  id: string;
+  icon: string;
+  name: string;
+  symbol: string;
+  rank: number;
+  price: number;
+  priceBtc: number;
+  volume: number;
+  marketCap: number;
+  availableSupply: number;
+  totalSupply: number;
+  priceChange1h: number;
+  priceChange1d: number;
+  priceChange1w: number;
+  redditUrl: string;
+  websiteUrl: string;
+  twitterUrl: string;
+  explorers: string[];
+};
+
+type TMeta = {
+  page: number;
+  limit: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+};
+
+interface IResult {
+  result: TCryptoData;
+  meta: TMeta;
+}
+
 const AppSider = () => {
   const [loading, setLoading] = useState(false);
   const [crypto, setCrypto] = useState([]);
