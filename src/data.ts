@@ -8,9 +8,13 @@ export type TAssets = {
   amount: number;
   price: number;
   date: object;
+  grow?: boolean;
+  growPercent?: number;
+  totalAmount?: number;
+  totalProfit?: number;
 };
 
-type TCryptoData = {
+export type TCryptoData = {
   id: string;
   icon: string;
   name: string;
@@ -662,6 +666,12 @@ export const cryptoAssets: TAssets[] = [
     id: 'ethereum',
     amount: 5,
     price: 2400,
+    date: new Date(),
+  },
+  {
+    id: 'dogecoin',
+    amount: 10000,
+    price: 0.072,
     date: new Date(),
   },
 ];

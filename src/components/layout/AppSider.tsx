@@ -1,21 +1,14 @@
 ﻿import { useEffect, useState } from 'react';
 import { Layout } from 'antd';
-import { Card, Statistic, List, Typography, Spin } from 'antd';
+import { Card, Statistic, List, Typography, Spin, Tag } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { fakeFetchCrypto, fetchAssets } from '../../API';
-import { TAssets, IResult } from '../../data';
+import { TAssets, IResult, TCryptoData } from '../../data';
+import { capitalize, percentDifference } from '../../utils';
 
 const siderStyle: React.CSSProperties = {
   padding: '1rem',
 };
-
-const data = [
-  'Racing car sprays burning fuel into crowd.',
-  'Japanese princess to wed commoner.',
-  'Australian walks 100km after outback crash.',
-  'Man charged over missing wedding girl.',
-  'Los Angeles battles huge wildfires.',
-];
 
 const AppSider = () => {
   const [loading, setLoading] = useState(false);
@@ -29,7 +22,19 @@ const AppSider = () => {
       const dataAssets = await fetchAssets();
       //
       setCrypto(dataCrypto);
-      setAssets(dataAssets);
+      setAssets(
+        dataAssets.map((asset) => {
+          // @ts-ignore
+          const coin: TCryptoData = dataCrypto.result.find((crypto) => crypto.id === asset.id);
+          return {
+            grow: asset.price < coin.price,
+            growPercent: percentDifference(asset.price, coin.price),
+            totalAmount: asset.amount * coin.price,
+            totalProfit: asset.amount * coin.price - asset.amount * asset.price,
+            ...asset,
+          };
+        }),
+      );
       setLoading(false);
     };
     preload();
@@ -39,36 +44,43 @@ const AppSider = () => {
 
   return (
     <Layout.Sider width="25%" style={siderStyle}>
-      <Card style={{ marginBottom: '1rem' }}>
-        <Statistic
-          title="Active"
-          value={11.28}
-          precision={2}
-          valueStyle={{ color: '#3f8600' }}
-          prefix={<ArrowUpOutlined />}
-          suffix="%"
-        />
-        <List
-          size="small"
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item>
-              <Typography.Text mark>[ITEM]</Typography.Text> {item}
-            </List.Item>
-          )}
-        />
-      </Card>
-
-      <Card>
-        <Statistic
-          title="Idle"
-          value={9.3}
-          precision={2}
-          valueStyle={{ color: '#cf1322' }}
-          prefix={<ArrowDownOutlined />}
-          suffix="%"
-        />
-      </Card>
+      {assets?.map((asset) => (
+        <Card key={asset.id} style={{ marginBottom: '1rem' }}>
+          <Statistic
+            title={capitalize(asset.id)}
+            value={asset.totalAmount}
+            precision={2}
+            valueStyle={{ color: asset.grow ? '#3f8600' : '#cf1322' }}
+            prefix={asset.grow ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+            suffix="$"
+          />
+          <List
+            size="small"
+            dataSource={[
+              { title: 'Total profit', value: asset.totalProfit, withTag: true },
+              { title: 'Asset amount', value: asset.amount, isPlain: true },
+            ]}
+            renderItem={(item) => (
+              <List.Item style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>{item.title}</span>
+                <span>
+                  {item.withTag && (
+                    <Tag color={asset.grow ? 'green' : 'red'}>{asset.growPercent}%</Tag>
+                  )}
+                </span>
+                <span>
+                  {item.isPlain && item.value}
+                  {!item.isPlain && (
+                    <Typography.Text type={asset.grow ? 'success' : 'danger'}>
+                      {item.value?.toFixed(2)}$
+                    </Typography.Text>
+                  )}
+                </span>
+              </List.Item>
+            )}
+          />
+        </Card>
+      ))}
     </Layout.Sider>
   );
 };
