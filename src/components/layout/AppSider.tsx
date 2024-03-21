@@ -1,44 +1,17 @@
-﻿import { useEffect, useState } from 'react';
-import { Layout } from 'antd';
+﻿import { Layout } from 'antd';
 import { Card, Statistic, List, Typography, Spin, Tag } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
-import { fakeFetchCrypto, fetchAssets } from '../../API';
-import { TAssets, IResult, TCryptoData } from '../../data';
-import { capitalize, percentDifference } from '../../utils';
+import { capitalize } from '../../utils';
+import { useContext } from 'react';
+import CryptoContext from '../../context/crypto-context';
 
 const siderStyle: React.CSSProperties = {
   padding: '1rem',
 };
 
 const AppSider = () => {
-  const [loading, setLoading] = useState(false);
-  const [crypto, setCrypto] = useState<IResult>();
-  const [assets, setAssets] = useState<TAssets[]>();
-
-  useEffect(() => {
-    const preload = async () => {
-      setLoading(true);
-      const dataCrypto = await fakeFetchCrypto();
-      const dataAssets = await fetchAssets();
-      //
-      setCrypto(dataCrypto);
-      setAssets(
-        dataAssets.map((asset) => {
-          const coin = dataCrypto.result.find((crypto) => crypto.id === asset.id)!;
-          return {
-            grow: asset.price < coin.price,
-            growPercent: percentDifference(asset.price, coin.price),
-            totalAmount: asset.amount * coin.price,
-            totalProfit: asset.amount * coin.price - asset.amount * asset.price,
-            ...asset,
-          };
-        }),
-      );
-      setLoading(false);
-    };
-    preload();
-  }, []);
-
+  const { loading, assets } = useContext(CryptoContext);
+  
   if (loading) return <Spin fullscreen />;
 
   return (
