@@ -49,6 +49,7 @@ export function CryptoContextProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
+    // @ts-ignore
     <CryptoContext.Provider value={{ loading, crypto, assets }}>{children}</CryptoContext.Provider>
   );
 }

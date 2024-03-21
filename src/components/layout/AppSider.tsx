@@ -1,5 +1,5 @@
 ﻿import { Layout } from 'antd';
-import { Card, Statistic, List, Typography, Spin, Tag } from 'antd';
+import { Card, Statistic, List, Typography, Tag } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { capitalize } from '../../utils';
 import { useContext } from 'react';
