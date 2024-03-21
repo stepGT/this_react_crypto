@@ -1,17 +1,21 @@
 ﻿import { createContext, useState, useEffect, PropsWithChildren } from 'react';
 import { fakeFetchCrypto, fetchAssets } from '../API';
 import { percentDifference } from '../utils';
-import { IResult, TAssets } from '../data';
+import { IResult, TAssets, TCryptoData } from '../data';
 
 interface IContext {
-  assets: TAssets;
-  crypto: IResult;
+  assets: TAssets[];
+  crypto: {
+    result: TCryptoData[];
+  };
   loading: boolean;
 }
 
 const CryptoContext = createContext<IContext>({
   assets: [],
-  crypto: [],
+  crypto: {
+    result: [],
+  },
   loading: false,
 });
 
