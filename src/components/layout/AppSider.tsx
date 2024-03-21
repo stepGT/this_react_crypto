@@ -24,8 +24,7 @@ const AppSider = () => {
       setCrypto(dataCrypto);
       setAssets(
         dataAssets.map((asset) => {
-          // @ts-ignore
-          const coin: TCryptoData = dataCrypto.result.find((crypto) => crypto.id === asset.id);
+          const coin = dataCrypto.result.find((crypto) => crypto.id === asset.id)!;
           return {
             grow: asset.price < coin.price,
             growPercent: percentDifference(asset.price, coin.price),
