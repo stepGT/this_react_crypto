@@ -1,6 +1,6 @@
-﻿import { Button, Layout, Select, Space, Modal } from 'antd';
+﻿import { Button, Layout, Select, Space, Modal, Drawer } from 'antd';
 import { useCrypto } from '../../context/crypto-context';
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import CoinInfoModal from '../CoinInfoModal';
 import { TCryptoData } from '../../data';
 
@@ -14,11 +14,20 @@ const headerStyle: React.CSSProperties = {
   alignItems: 'center',
 };
 
-const AppHeader = () => {
+const AppHeader:FC = () => {
   const [select, setSelect] = useState<boolean>(false);
   const [modal, setModal] = useState<boolean>(false);
   const [coin, setCoin] = useState<TCryptoData>();
+  const [open, setOpen] = useState<boolean>(false);
   const { crypto } = useCrypto();
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
 
   const handleSelect = (value: string) => {
     setCoin(crypto?.result.find((c) => c.id === value));
@@ -53,7 +62,9 @@ const AppHeader = () => {
           </Space>
         )}
       />
-      <Button type="primary">Add asset</Button>
+      <Button onClick={() => showDrawer()} type="primary">
+        Add asset
+      </Button>
       <Modal
         open={modal}
         footer={null}
@@ -61,6 +72,11 @@ const AppHeader = () => {
         onCancel={() => setModal(false)}>
         <CoinInfoModal name={coin?.name} />
       </Modal>
+      <Drawer title="Basic Drawer" onClose={onClose} open={open}>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
     </Layout.Header>
   );
 };
