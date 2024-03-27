@@ -3,6 +3,7 @@ import { useCrypto } from '../../context/crypto-context';
 import { FC, useEffect, useState } from 'react';
 import CoinInfoModal from '../CoinInfoModal';
 import { TCryptoData } from '../../data';
+import AddAssetForm from '../AddAssetForm';
 
 const headerStyle: React.CSSProperties = {
   width: '100%',
@@ -73,9 +74,7 @@ const AppHeader:FC = () => {
         <CoinInfoModal name={coin?.name} />
       </Modal>
       <Drawer title="Basic Drawer" onClose={onClose} open={open}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <AddAssetForm />
       </Drawer>
     </Layout.Header>
   );
