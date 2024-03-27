@@ -71,7 +71,7 @@ const AppHeader:FC = () => {
         footer={null}
         onOk={() => setModal(false)}
         onCancel={() => setModal(false)}>
-        <CoinInfoModal name={coin?.name} />
+        <CoinInfoModal coin={coin!} />
       </Modal>
       <Drawer title="Basic Drawer" onClose={onClose} open={open}>
         <AddAssetForm />
