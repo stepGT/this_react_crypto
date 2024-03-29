@@ -73,7 +73,7 @@ const AppHeader:FC = () => {
         onCancel={() => setModal(false)}>
         <CoinInfoModal coin={coin!} />
       </Modal>
-      <Drawer title="Basic Drawer" onClose={onClose} open={open}>
+      <Drawer width={'60%'} destroyOnClose title="Basic Drawer" onClose={onClose} open={open}>
         <AddAssetForm />
       </Drawer>
     </Layout.Header>
