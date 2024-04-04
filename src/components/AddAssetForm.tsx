@@ -1,5 +1,15 @@
-﻿import { useState } from 'react';
-import { Select, Space, Typography, Divider, Form, InputNumber, DatePicker, Button } from 'antd';
+﻿import { useState, useRef } from 'react';
+import {
+  Select,
+  Space,
+  Typography,
+  Divider,
+  Form,
+  InputNumber,
+  DatePicker,
+  Button,
+  Result,
+} from 'antd';
 import { TCryptoData } from '../data';
 import { useCrypto } from '../context/crypto-context';
 
@@ -20,10 +30,28 @@ const validateMessages = {
   },
 };
 
-const AddAssetForm = () => {
+const AddAssetForm = ({ onClose }: { onClose: React.MouseEventHandler<HTMLElement> }) => {
   const [coin, setCoin] = useState<TCryptoData>();
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const { crypto } = useCrypto();
   const [form] = Form.useForm();
+  const assetRef = useRef<TValues>();
+
+  if (submitted) {
+    return (
+      <Result
+        status="success"
+        title="New Asset Added"
+        subTitle={`Added ${assetRef.current?.amount} of ${coin?.name} by price ${assetRef.current?.price}`}
+        extra={[
+          <Button type="primary" key="console" onClick={onClose}>
+            Close
+          </Button>,
+        ]}
+      />
+    );
+  }
+
   //
   if (!coin) {
     return (
@@ -49,7 +77,7 @@ const AddAssetForm = () => {
   }
 
   const onFinish = (values: TValues) => {
-    console.log(values);
+    setSubmitted(true);
   };
 
   const handleAmountChange = (value: number | null): void => {
