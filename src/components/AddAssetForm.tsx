@@ -3,6 +3,13 @@ import { Select, Space, Typography, Divider, Form, InputNumber, DatePicker, Butt
 import { TCryptoData } from '../data';
 import { useCrypto } from '../context/crypto-context';
 
+type TValues = {
+  amount: number;
+  date?: object;
+  price?: number;
+  total?: number;
+};
+
 const validateMessages = {
   required: '${label} is required!',
   types: {
@@ -41,7 +48,7 @@ const AddAssetForm = () => {
     );
   }
 
-  const onFinish = (values: any) => {
+  const onFinish = (values: TValues) => {
     console.log(values);
   };
 
@@ -59,7 +66,7 @@ const AddAssetForm = () => {
         maxWidth: 600,
       }}
       initialValues={{
-        price: coin.price?.toFixed(2),
+        price: Number(coin.price?.toFixed(2)),
       }}
       onFinish={onFinish}
       validateMessages={validateMessages}>
