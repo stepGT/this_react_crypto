@@ -52,6 +52,20 @@ const AddAssetForm = () => {
     console.log(values);
   };
 
+  const handleAmountChange = (value: number | null): void => {
+    const price = form.getFieldValue('price');
+    form.setFieldsValue({
+      total: value && Number(value * price).toFixed(2),
+    });
+  };
+
+  const handlePriceChange = (value: number | null): void => {
+    const amount = form.getFieldValue('amount');
+    form.setFieldsValue({
+      total: value && Number(value * amount).toFixed(2),
+    });
+  };
+
   return (
     <Form
       form={form}
@@ -85,13 +99,13 @@ const AddAssetForm = () => {
         ]}>
         <InputNumber
           placeholder="Enter coin amount"
-          onChange={() => {}}
+          onChange={handleAmountChange}
           style={{ width: '100%' }}
         />
       </Form.Item>
 
       <Form.Item label="Price" name="price">
-        <InputNumber disabled style={{ width: '100%' }} />
+        <InputNumber onChange={handlePriceChange} style={{ width: '100%' }} />
       </Form.Item>
 
       <Form.Item label="Date & Time" name="date">
