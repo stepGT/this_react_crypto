@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import { TCryptoData } from '../data';
 import { useCrypto } from '../context/crypto-context';
+import CoinInfo from './CoinInfo';
 
 type TValues = {
   amount: number;
@@ -112,7 +113,7 @@ const AddAssetForm = ({ onClose }: { onClose: React.MouseEventHandler<HTMLElemen
       }}
       onFinish={onFinish}
       validateMessages={validateMessages}>
-      <Typography.Title level={2}>{coin.name}</Typography.Title>
+      <CoinInfo coin={coin} withSymbol />
       <Divider />
 
       <Form.Item
