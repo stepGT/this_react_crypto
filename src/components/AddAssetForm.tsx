@@ -2,7 +2,6 @@
 import {
   Select,
   Space,
-  Typography,
   Divider,
   Form,
   InputNumber,
@@ -14,11 +13,14 @@ import { TCryptoData } from '../data';
 import { useCrypto } from '../context/crypto-context';
 import CoinInfo from './CoinInfo';
 
-type TValues = {
+export type TValues = {
   amount: number;
-  date?: object;
+  date?: {
+    $d?: object;
+  };
   price?: number;
   total?: number;
+  current?: any;
 };
 
 const validateMessages = {
@@ -34,7 +36,7 @@ const validateMessages = {
 const AddAssetForm = ({ onClose }: { onClose: React.MouseEventHandler<HTMLElement> }) => {
   const [coin, setCoin] = useState<TCryptoData>();
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const { crypto } = useCrypto();
+  const { crypto, addAsset } = useCrypto();
   const [form] = Form.useForm();
   const assetRef = useRef<TValues>();
 
@@ -78,7 +80,15 @@ const AddAssetForm = ({ onClose }: { onClose: React.MouseEventHandler<HTMLElemen
   }
 
   const onFinish = (values: TValues) => {
+    const newAsset = {
+      id: coin.id,
+      amount: values.amount,
+      price: values.price,
+      date: values.date?.$d ?? new Date(),
+    };
+    assetRef.current = newAsset;
     setSubmitted(true);
+    addAsset(newAsset);
   };
 
   const handleAmountChange = (value: number | null): void => {
