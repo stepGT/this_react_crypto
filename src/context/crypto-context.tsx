@@ -2,6 +2,7 @@
 import { fakeFetchCrypto, fetchAssets } from '../API';
 import { percentDifference } from '../utils';
 import { IResult, TAssets, TCryptoData } from '../data';
+import { TValues } from '../components/AddAssetForm';
 
 interface IContext {
   assets: TAssets[];
@@ -9,6 +10,7 @@ interface IContext {
     result: TCryptoData[];
   };
   loading: boolean;
+  addAsset: (p: TValues) => void;
 }
 
 const CryptoContext = createContext<IContext>({
@@ -17,12 +19,31 @@ const CryptoContext = createContext<IContext>({
     result: [],
   },
   loading: false,
+  addAsset: () => {},
 });
 
 export function CryptoContextProvider({ children }: PropsWithChildren) {
   const [loading, setLoading] = useState<boolean>(false);
   const [crypto, setCrypto] = useState<IResult>();
   const [assets, setAssets] = useState<TAssets[]>();
+
+  const mapAssets = (assets: TAssets[], result: IResult) => {
+    return assets.map((asset) => {
+      const coin = result.result.find((c) => c.id === asset.id);
+      return {
+        grow: asset.price < coin.price,
+        growPercent: percentDifference(asset.price, coin.price),
+        totalAmount: asset.amount * coin.price,
+        totalProfit: asset.amount * coin.price - asset.amount * asset.price,
+        name: coin?.name,
+        ...asset,
+      };
+    });
+  };
+
+  const addAsset = (newAsset: TAssets) => {
+    setAssets((prev) => mapAssets([...prev, newAsset], crypto));
+  };
 
   useEffect(() => {
     const preload = async () => {
@@ -31,18 +52,7 @@ export function CryptoContextProvider({ children }: PropsWithChildren) {
       const dataAssets = await fetchAssets();
       //
       setCrypto(dataCrypto);
-      setAssets(
-        dataAssets.map((asset) => {
-          const coin = dataCrypto.result.find((crypto) => crypto.id === asset.id)!;
-          return {
-            grow: asset.price < coin.price,
-            growPercent: percentDifference(asset.price, coin.price),
-            totalAmount: asset.amount * coin.price,
-            totalProfit: asset.amount * coin.price - asset.amount * asset.price,
-            ...asset,
-          };
-        }),
-      );
+      setAssets(mapAssets(dataAssets, dataCrypto));
       setLoading(false);
     };
     preload();
@@ -50,12 +60,14 @@ export function CryptoContextProvider({ children }: PropsWithChildren) {
 
   return (
     // @ts-ignore
-    <CryptoContext.Provider value={{ loading, crypto, assets }}>{children}</CryptoContext.Provider>
+    <CryptoContext.Provider value={{ loading, crypto, assets, addAsset }}>
+      {children}
+    </CryptoContext.Provider>
   );
 }
 
 export default CryptoContext;
 
 export function useCrypto() {
-  return useContext(CryptoContext)
+  return useContext(CryptoContext);
 }
