@@ -13,7 +13,7 @@ const contentStyle: React.CSSProperties = {
 const AppContent = () => {
   const { assets, crypto } = useCrypto();
 
-  const cryptoPriceMap = crypto.result.reduce((acc, c) => {
+  const cryptoPriceMap = crypto?.result.reduce((acc, c) => {
     acc[c.id] = c.price;
     return acc;
   }, {});
@@ -23,7 +23,7 @@ const AppContent = () => {
       <Typography.Title level={3} style={{ textAlign: 'left', color: '#fff' }}>
         Portfolio:{' '}
         {assets
-          .map((asset) => asset.amount * cryptoPriceMap[asset.id])
+          ?.map((asset) => asset.amount * cryptoPriceMap[asset.id])
           .reduce((acc, v) => (acc += v), 0)
           .toFixed(2)}
         $
